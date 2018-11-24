@@ -5,12 +5,17 @@
 class Server
 {
 private:
-    struct sockaddr_in server;
     std::vector<struct sockaddr_in> clients;
 
+    void Listen(int queueSize);
+    void Bind();
+
 public:
-    explicit Server(int port);
-    int AddClient(int socket);
+    struct sockaddr_in server;
+    int socket;
+
+    explicit Server(int socket, int port, int queueSize);
+    int AddClient();
 
     ~Server();
 };

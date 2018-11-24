@@ -26,7 +26,6 @@ int main()
     char msgrasp[100] = " "; //mesaj de raspuns pentru client
     int sd;                     //descriptorul de socket
 
-    auto *server = new Server(PORT);
     /* crearea unui socket */
     if ((sd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
     {
@@ -34,21 +33,7 @@ int main()
         return errno;
     }
 
-    /* pregatirea structurilor de date */
-
-    /* atasam socketul */
-    if (bind(sd, (struct sockaddr *) &server->server, sizeof(struct sockaddr)) == -1)
-    {
-        perror("[server]Eroare la bind().\n");
-        return errno;
-    }
-
-    /* punem serverul sa asculte daca vin clienti sa se conecteze */
-    if (listen(sd, 5) == -1)
-    {
-        perror("[server]Eroare la listen().\n");
-        return errno;
-    }
+    auto *server = new Server(sd, PORT, 5);
 
     printf("[server]Asteptam la portul %d...\n", PORT);
     fflush(stdout);
@@ -56,7 +41,7 @@ int main()
     while (1)
     {
         /* acceptam un client (stare blocanta pina la realizarea conexiunii) */
-        int client = server->AddClient(sd);
+        int client = server->AddClient();
 
         signal(SIGCHLD, proc_exit);
         switch (fork())
