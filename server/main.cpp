@@ -1,5 +1,4 @@
 #include <errno.h>
-#include <unistd.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -10,87 +9,53 @@
 #include <netinet/in.h>
 
 #include "Models/Server.cpp"
+#include "CommunicationHelper.h"
 
-#define PORT 2026
-
-void proc_exit(int signo)
-{
-    pid_t pid;
-
-    while ((pid = waitpid(-1, NULL, WNOHANG)) > 0);
-}
+#define PORT 2027
 
 int main()
 {
-    char msg[100];             //mesajul primit de la client
-    char msgrasp[100] = " "; //mesaj de raspuns pentru client
-    int sd;                     //descriptorul de socket
+    std::string msg;
+    std::string msgrasp;
 
-    /* crearea unui socket */
-    if ((sd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
+    auto *server = new Server(CreateSocket(), PORT, 5);
+
+    printf("[Server]Waiting on port %d...\n", PORT);
+
+    while (true)
     {
-        perror("[server]Eroare la socket().\n");
-        return errno;
-    }
-
-    auto *server = new Server(sd, PORT, 5);
-
-    printf("[server]Asteptam la portul %d...\n", PORT);
-    fflush(stdout);
-
-    while (1)
-    {
-        /* acceptam un client (stare blocanta pina la realizarea conexiunii) */
         int client = server->AddClient();
 
-        signal(SIGCHLD, proc_exit);
-        switch (fork())
+        switch (Fork())
         {
-            case -1:
-                perror("main: fork");
-                exit(0);
             case 0:
-
-                /* eroare la acceptarea conexiunii de la un client */
                 if (client < 0)
                 {
-                    perror("[server]Eroare la accept().\n");
+                    perror("[Server]Error at accept().\n");
                     continue;
                 }
 
-                /* s-a realizat conexiunea, se astepta mesajul */
-                bzero(msg, 100);
-                printf("[server]Asteptam mesajul...\n");
-                fflush(stdout);
+                printf("[Server]New client connected (ID: %d)\n", client);
 
-                /* citirea mesajului */
-                if (read(client, msg, 100) <= 0)
+                server->WriteToAllClients("[From server]A new client joined us.");
+
+                while(true)
                 {
-                    perror("[server]Eroare la read() de la client.\n");
-                    close(client); /* inchidem conexiunea cu clientul */
-                    continue;      /* continuam sa ascultam */
+                    std::string command;
+                    Read(client, command);
+
+                    if(command == "quit")
+                    {
+                        break;
+                    }
+
+                    server->WriteToAllClients(command);
                 }
 
-                printf("[server]Mesajul a fost receptionat...%s\n", msg);
-
-                /*pregatim mesajul de raspuns */
-                bzero(msgrasp, 100);
-                strcat(msgrasp, "Hello ");
-                strcat(msgrasp, msg);
-
-                printf("[server]Trimitem mesajul inapoi...%s\n", msgrasp);
-
-                /* returnam mesajul clientului */
-                if (write(client, msgrasp, 100) <= 0)
-                {
-                    perror("[server]Eroare la write() catre client.\n");
-                    continue; /* continuam sa ascultam */
-                } else
-                    printf("[server]Mesajul a fost trasmis cu succes.\n");
-                /* am terminat cu acest client, inchidem conexiunea */
-                close(client);
-
+                server->CloseClient(client);
                 exit(0);
+            default:
+                break;
         }
     }
 }

@@ -8,13 +8,11 @@
 #include <netdb.h>
 #include <string.h>
 #include <arpa/inet.h>
+#include <CommunicationHelper.h>
+#include <iostream>
 
-#include "Client.h";
-
-/* codul de eroare returnat de anumite apeluri */
-/*extern int errno;*/
-
-/* portul de conectare la server*/
+#include "Models/Client.h"
+#include "Response.h"
 
 int main (int argc, char *argv[])
 {
@@ -22,7 +20,7 @@ int main (int argc, char *argv[])
 
     int sd;			// descriptorul de socket
     struct sockaddr_in server{};	// structura folosita pentru conectare
-    char msg[100];		// mesajul trimis
+    std::string msg;		// mesajul trimis
 
     /* exista toate argumentele in linia de comanda? */
     if (argc != 3)
@@ -55,29 +53,41 @@ int main (int argc, char *argv[])
         return errno;
     }
 
-    /* citirea mesajului */
-    bzero (msg, 100);
-    printf ("[client]Introduceti un nume: ");
-    fflush (stdout);
-    read (0, msg, 100);
+    int parent = Fork();
 
-    /* trimiterea mesajului la server */
-    if (write (sd, msg, 100) <= 0)
+    if (parent)
     {
-        perror ("[client]Eroare la write() spre server.\n");
-        return errno;
+        std::string command;
+        while(true)
+        {
+            std::getline(std::cin, command);
+            Write(sd, command);
+            std::cout<<"ai introdus "<< command <<std::endl;
+
+            if(command == "quit")
+            {
+                exit(0);
+
+                break;
+            }
+        }
+    }
+    else
+    {
+        while(true)
+        {
+            Read(sd, msg);
+            std::cout << msg << std::endl;
+
+            if(msg == "quit")
+            {
+                break;
+            }
+        }
+        exit(0);
     }
 
-    /* citirea raspunsului dat de server
-       (apel blocant pina cind serverul raspunde) */
-    if (read (sd, msg, 100) < 0)
-    {
-        perror ("[client]Eroare la read() de la server.\n");
-        return errno;
-    }
-    /* afisam mesajul primit */
-    printf ("[client]Mesajul primit este: %s\n", msg);
-
-    /* inchidem conexiunea, am terminat */
     close (sd);
+
+    return 0;
 }

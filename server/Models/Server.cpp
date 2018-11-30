@@ -1,5 +1,7 @@
+#pragma once
 
 #include <strings.h>
+#include <CommunicationHelper.h>
 #include "Server.h"
 
 Server::Server(int socket, int port, int queueSize)
@@ -26,28 +28,40 @@ int Server::AddClient()
     bzero(&from, sizeof(from));
     length = sizeof(from);
 
-    int client = accept(this->socket, (struct sockaddr *)&from, &length);
+    int id = accept(this->socket, (struct sockaddr *) &from, &length);
 
-    this->clients.push_back(from);
+    auto *client = new Client(id, from, length);
+    this->clients.push_back(client);
 
-    return client;
+    return id;
+}
+
+void Server::CloseClient(int id)
+{
+    close(id);
 }
 
 void Server::Listen(int queueSize)
 {
-    if (listen(this->socket, 5) == -1)
+    if (listen(this->socket, queueSize) == -1)
     {
-        // perror("[server]Eroare la listen().\n");
+         perror("[Server]Error at listen().\n");
     }
 }
 
 void Server::Bind()
 {
-/* atasam socketul */
     if (bind(this->socket, (struct sockaddr *) &this->server, sizeof(struct sockaddr)) == -1)
     {
-//        perror("[server]Eroare la bind().\n");
-//        return errno;
+        perror("[Server]Error at bind().\n");
+    }
+}
+
+void Server::WriteToAllClients(std::string message)
+{
+    for (auto *client: clients)
+    {
+        Write(client->GetId(), message);
     }
 }
 

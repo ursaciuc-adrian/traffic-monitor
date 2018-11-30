@@ -3,4 +3,6 @@ project(server)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(server main.cpp)
+add_executable(server main.cpp Models/Client.cpp Models/Client.h)
+
+include_directories( ../Shared)
