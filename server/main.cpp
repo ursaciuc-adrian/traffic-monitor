@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <iostream>
 #include "../Shared/CommunicationHelper.h"
 #include "Models/Server.cpp"
 
@@ -25,7 +26,7 @@ int main()
             int client = server->AddClient();
 
             string welcomeMsg = "Welcome to the Awesome Chat Server!\r\n";
-            write(client, welcomeMsg.c_str(), welcomeMsg.size() + 1);
+            Write(client, welcomeMsg);
 
             server->WriteToAllClients("new fish boys..\r\n", client);
         }
@@ -34,11 +35,10 @@ int main()
         {
             if (FD_ISSET(client->GetSocket(), &copy))
             {
-                char buf[500];
-                bzero(buf, 500);
+                string buf;
 
-                read(client->GetSocket(), buf, 500);
-                printf("Mesaj de la %d: %s\n", client->GetSocket(), buf);
+                Read(client->GetSocket(), buf);
+                printf("Mesaj de la %d: %s\n", client->GetSocket(), buf.c_str());
                 server->WriteToAllClients(buf, client->GetSocket());
             }
         }

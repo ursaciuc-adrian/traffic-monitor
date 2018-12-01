@@ -37,9 +37,27 @@ int Server::AddClient()
     return socket;
 }
 
-void Server::CloseClient(int id)
+void Server::RemoveClient(int socket)
 {
-    close(id);
+    int index = -1;
+  /*  printf("%d\n", this->clients.size());
+    for (int i = 0; i < this->clients.size() - 1; ++i)
+    {
+        if(this->clients[i]->GetSocket() == socket)
+        {
+            index = i;
+            break;
+        }
+    }*/
+
+    if(index != -1)
+    {
+        printf("DE sters: %d\n", this->clients[index]->GetSocket());
+       // this->clients.erase(this->clients.begin() + index);
+    }
+
+    close(socket);
+    FD_CLR(socket, &this->master);
 }
 
 void Server::Listen(int queueSize)
@@ -66,9 +84,8 @@ void Server::WriteToAllClients(std::string message, int exclude)
         {
             continue;
         }
-
-        write(client->GetSocket(), message.c_str(), message.size() + 1);
-        //Write(client->GetSocket(), message);
+        printf("Sending to %d\n", client->GetSocket());
+        Write(client->GetSocket(), message);
     }
 }
 

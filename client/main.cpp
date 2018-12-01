@@ -1,9 +1,11 @@
 #include <iostream>
-#include <strings.h>
+#include <string>
 
 #include "../Shared/CommunicationHelper.h"
 #include "Models/Client.cpp"
 #include "Models/Server.cpp"
+
+using namespace std;
 
 int main(int argc, char *argv[])
 {
@@ -31,19 +33,18 @@ int main(int argc, char *argv[])
             while (true)
             {
                 std::getline(std::cin, request);
-               // Write(client->GetSocket(), request);
-               write(client->GetSocket(), request.c_str(), 500);
+                Write(client->GetSocket(), request);
             }
 
         default:
             while (true)
             {
-                char buf[4096];
-                bzero(buf, 4096);
-                ssize_t bytesIn = read(client->GetSocket(), buf, 4096);
-                printf("%s", buf);
+                Read(client->GetSocket(), response);
+                cout << response;
             }
     }
 
     close(client->GetSocket());
+
+    return 0;
 }
