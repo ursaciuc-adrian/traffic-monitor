@@ -1,34 +1,15 @@
 #pragma once
 
 #include <string>
+#include "Server.h"
 
 class Client
 {
-private:
-    std::string ip;
-    int port;
+    int socket;
 public:
-    Client(std::string ip, int port);
-    int GetPort();
-    std::string GetIp();
+    explicit Client(int socket);
+    void ConnectToServer(Server *server);
 
-    ~Client();
+    int GetSocket();
 };
 
-Client::Client(std::string ip, int port)
-{
-    this->ip = std::move(ip);
-    this->port = port;
-}
-
-int Client::GetPort()
-{
-    return this->port;
-}
-
-std::string Client::GetIp()
-{
-    return this->ip;
-}
-
-Client::~Client() = default;

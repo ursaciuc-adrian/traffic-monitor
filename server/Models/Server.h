@@ -10,18 +10,25 @@
 class Server
 {
 private:
-    std::vector<Client *> clients;
     struct sockaddr_in server;
     int socket;
+    int nfds;
+    fd_set master;
 
     void Listen(int queueSize);
     void Bind();
 
 public:
-    explicit Server(int socket, int port, int queueSize);
+    std::vector<Client *> clients;
+    void Select(fd_set &masterCopy);
+
+    explicit Server();
+    void CreateServer(int port, int queueSize);
     int AddClient();
     void CloseClient(int id);
-    void WriteToAllClients(std::string message);
+    void WriteToAllClients(std::string message, int exclude = 0);
+
+    int GetSocket();
 
     ~Server();
 };

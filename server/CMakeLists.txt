@@ -3,6 +3,7 @@ project(server)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(server main.cpp Models/Client.cpp Models/Client.h)
+file(GLOB SOURCES *.h *.cpp)
 
-include_directories( ../Shared)
+add_executable(ClionProject ${SOURCE_FILES} ${SOURCES} Helpers/CommunicationHelper.h)
+add_executable(server main.cpp)

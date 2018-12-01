@@ -1,16 +1,16 @@
 #include "Client.h"
 
-Client::Client(int id, struct sockaddr_in from, socklen_t length)
+Client::Client(int socket, string ip, int port)
 {
-    this->id = id;
-    this->from = from;
-    this->length = length;
-}
-
-int Client::GetId()
-{
-    return this->id;
+    this->socket = socket;
+    this->ip = ip;
+    this->port = port;
 }
 
 Client::~Client()
 = default;
+
+int Client::GetSocket()
+{
+    return this->socket;
+}

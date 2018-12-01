@@ -3,15 +3,16 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
+using namespace std;
+
 class Client
 {
-    int id;
-    struct sockaddr_in from;
-    socklen_t length;
-
+    int socket;
+    string ip;
+    int port;
 public:
-    Client(int id, sockaddr_in from, socklen_t length);
-    int GetId();
+    Client(int socket, string ip, int port);
+    int GetSocket();
 
     ~Client();
 };

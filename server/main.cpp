@@ -1,61 +1,46 @@
-#include <errno.h>
+#include <sys/types.h>
+#include <unistd.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
-#include <signal.h>
-#include <sys/wait.h>
-#include <sys/resource.h>
-#include <netinet/in.h>
-
+#include "../Shared/CommunicationHelper.h"
 #include "Models/Server.cpp"
-#include "CommunicationHelper.h"
 
-#define PORT 2027
+using namespace std;
+
+#define PORT 2026
 
 int main()
 {
-    std::string msg;
-    std::string msgrasp;
-
-    auto *server = new Server(CreateSocket(), PORT, 5);
-
-    printf("[Server]Waiting on port %d...\n", PORT);
+    auto *server = new Server();
+    server->CreateServer(PORT, 5);
 
     while (true)
     {
-        int client = server->AddClient();
+        fd_set copy;
+        server->Select(copy);
 
-        switch (Fork())
+        if (FD_ISSET(server->GetSocket(), &copy))
         {
-            case 0:
-                if (client < 0)
-                {
-                    perror("[Server]Error at accept().\n");
-                    continue;
-                }
+            int client = server->AddClient();
 
-                printf("[Server]New client connected (ID: %d)\n", client);
+            string welcomeMsg = "Welcome to the Awesome Chat Server!\r\n";
+            write(client, welcomeMsg.c_str(), welcomeMsg.size() + 1);
 
-                server->WriteToAllClients("[From server]A new client joined us.");
+            server->WriteToAllClients("new fish boys..\r\n", client);
+        }
 
-                while(true)
-                {
-                    std::string command;
-                    Read(client, command);
+        for (auto *client: server->clients)
+        {
+            if (FD_ISSET(client->GetSocket(), &copy))
+            {
+                char buf[500];
+                bzero(buf, 500);
 
-                    if(command == "quit")
-                    {
-                        break;
-                    }
-
-                    server->WriteToAllClients(command);
-                }
-
-                server->CloseClient(client);
-                exit(0);
-            default:
-                break;
+                read(client->GetSocket(), buf, 500);
+                printf("Mesaj de la %d: %s\n", client->GetSocket(), buf);
+                server->WriteToAllClients(buf, client->GetSocket());
+            }
         }
     }
 }

@@ -1,93 +1,49 @@
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <errno.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <netdb.h>
-#include <string.h>
-#include <arpa/inet.h>
-#include <CommunicationHelper.h>
 #include <iostream>
+#include <strings.h>
 
-#include "Models/Client.h"
-#include "Response.h"
+#include "../Shared/CommunicationHelper.h"
+#include "Models/Client.cpp"
+#include "Models/Server.cpp"
 
-int main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-    Client *client;
-
-    int sd;			// descriptorul de socket
-    struct sockaddr_in server{};	// structura folosita pentru conectare
-    std::string msg;		// mesajul trimis
-
-    /* exista toate argumentele in linia de comanda? */
     if (argc != 3)
     {
-        printf ("Sintaxa: %s <adresa_server> <port>\n", argv[0]);
+        printf("Sintaxa: %s <adresa_server> <port>\n", argv[0]);
         return -1;
     }
-    client = new Client(argv[1], std::stoi(argv[2]));
 
+    auto *server = new Server(argv[1], std::stoi(argv[2]));
 
-    /* cream socketul */
-    if ((sd = socket (AF_INET, SOCK_STREAM, 0)) == -1)
+    auto *client = new Client(CreateSocket());
+    client->ConnectToServer(server);
+
+    std::string request;
+    std::string response;
+
+    switch (fork())
     {
-        perror ("Eroare la socket().\n");
-        return errno;
-    }
+        case -1:
+            perror("fork");
+            exit(1);
 
-    /* umplem structura folosita pentru realizarea conexiunii cu serverul */
-    /* familia socket-ului */
-    server.sin_family = AF_INET;
-    /* adresa IP a serverului */
-    server.sin_addr.s_addr = inet_addr(client->GetIp().c_str());
-    /* portul de conectare */
-    server.sin_port = htons (static_cast<uint16_t>(client->GetPort()));
-
-    /* ne conectam la server */
-    if (connect (sd, (struct sockaddr *) &server,sizeof (struct sockaddr)) == -1)
-    {
-        perror ("[client]Eroare la connect().\n");
-        return errno;
-    }
-
-    int parent = Fork();
-
-    if (parent)
-    {
-        std::string command;
-        while(true)
-        {
-            std::getline(std::cin, command);
-            Write(sd, command);
-            std::cout<<"ai introdus "<< command <<std::endl;
-
-            if(command == "quit")
+        case 0:
+            while (true)
             {
-                exit(0);
-
-                break;
+                std::getline(std::cin, request);
+               // Write(client->GetSocket(), request);
+               write(client->GetSocket(), request.c_str(), 500);
             }
-        }
-    }
-    else
-    {
-        while(true)
-        {
-            Read(sd, msg);
-            std::cout << msg << std::endl;
 
-            if(msg == "quit")
+        default:
+            while (true)
             {
-                break;
+                char buf[4096];
+                bzero(buf, 4096);
+                ssize_t bytesIn = read(client->GetSocket(), buf, 4096);
+                printf("%s", buf);
             }
-        }
-        exit(0);
     }
 
-    close (sd);
-
-    return 0;
+    close(client->GetSocket());
 }
