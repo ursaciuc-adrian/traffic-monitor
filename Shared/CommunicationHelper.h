@@ -5,7 +5,7 @@
 #include <vector>
 #include <netinet/in.h>
 
-static int Write(int socket, const std::string &str)
+static int Write(int socket, std::string str)
 {
     /*unsigned long length = str.length();
     if(write(socket, &length, sizeof(length)) == -1)
@@ -20,7 +20,7 @@ static int Write(int socket, const std::string &str)
 
         return -1;
     }*/
-
+    str += "\r\n";
     write(socket, str.c_str(), 100);
     return 0;
 }
@@ -48,7 +48,7 @@ static int Read(int socket, std::string &str)
 */
 
     char buf[200];
-    read(socket, buf, 200);
+    read(socket, &buf, 200);
 
     std::string resp(buf);
     str = resp;

@@ -24,10 +24,10 @@ public:
 
     explicit Server();
     void CreateServer(int port, int queueSize);
-    int AddClient();
+    Client* AddClient();
     void RemoveClient(int socket);
     void WriteToAllClients(std::string message, int exclude = 0);
-
+    void WriteToClient(Client *client, std::string message);
     int GetSocket();
 
     ~Server();

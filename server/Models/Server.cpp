@@ -1,3 +1,5 @@
+#include <utility>
+
 #pragma once
 
 #include <strings.h>
@@ -23,7 +25,7 @@ void Server::CreateServer(int port, int queueSize)
     this->nfds = this->socket;
 }
 
-int Server::AddClient()
+Client* Server::AddClient()
 {
     int socket = accept(this->socket, nullptr, nullptr);
 
@@ -34,7 +36,7 @@ int Server::AddClient()
 
     this->nfds = max(this->nfds, socket);
 
-    return socket;
+    return client;
 }
 
 void Server::RemoveClient(int socket)
@@ -78,7 +80,6 @@ void Server::Bind()
 
 void Server::WriteToAllClients(std::string message, int exclude)
 {
-    message += "\r\n";
     for (auto *client: clients)
     {
         if(client->GetSocket() == exclude)
@@ -86,10 +87,7 @@ void Server::WriteToAllClients(std::string message, int exclude)
             continue;
         }
         printf("Sending to %d this messaje: %s\n", client->GetSocket(), message.c_str());
-
-        write(client->GetSocket(), message.c_str(), 20);
-
-      //  Write(client->GetSocket(), message);
+        this->WriteToClient(client, message);
     }
 }
 
@@ -108,6 +106,11 @@ void Server::Select(fd_set &masterCopy)
 {
     masterCopy = this->master;
     select(this->nfds + 1, &masterCopy, nullptr, nullptr, nullptr);
+}
+
+void Server::WriteToClient(Client *client, std::string message)
+{
+    Write(client->GetSocket(), std::move(message));
 }
 
 Server::~Server()

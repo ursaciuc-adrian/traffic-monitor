@@ -23,13 +23,12 @@ int main()
 
         if (FD_ISSET(server->GetSocket(), &copy))
         {
-            int client = server->AddClient();
+            auto* client = server->AddClient();
 
             string welcomeMsg = "Welcome to the Awesome Chat Server!\r\n";
-            // Write(client, welcomeMsg);
-            write(client, welcomeMsg.c_str(), welcomeMsg.size() + 1);
 
-            server->WriteToAllClients("new fish boys..\r\n", client);
+            server->WriteToClient(client, welcomeMsg);
+            server->WriteToAllClients("new fish boys..\r\n", client->GetSocket());
         }
 
         for (auto *client: server->clients)
@@ -38,12 +37,10 @@ int main()
             {
                 string buf;
 
-               // Read(client->GetSocket(), buf);
-                char buff[200];
-                read(client->GetSocket(), buff, 200);
-                string buff2(buff);
-                printf("Mesaj de la %d: %s\n", client->GetSocket(), buff);
-                server->WriteToAllClients(buff2, client->GetSocket());
+                Read(client->GetSocket(), buf);
+
+                printf("Mesaj de la %d: %s\n", client->GetSocket(), buf.c_str());
+                server->WriteToAllClients(buf, client->GetSocket());
             }
         }
     }
