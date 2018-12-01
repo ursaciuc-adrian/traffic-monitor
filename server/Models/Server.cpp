@@ -39,10 +39,9 @@ Client* Server::AddClient()
     return client;
 }
 
-void Server::RemoveClient(int socket)
+void Server::RemoveClient(Client *client)
 {
     int index = -1;
-  /*  printf("%d\n", this->clients.size());
     for (int i = 0; i < this->clients.size() - 1; ++i)
     {
         if(this->clients[i]->GetSocket() == socket)
@@ -50,16 +49,15 @@ void Server::RemoveClient(int socket)
             index = i;
             break;
         }
-    }*/
+    }
 
     if(index != -1)
     {
-        printf("DE sters: %d\n", this->clients[index]->GetSocket());
-       // this->clients.erase(this->clients.begin() + index);
+        this->clients.erase(this->clients.begin() + index);
     }
 
-    close(socket);
-    FD_CLR(socket, &this->master);
+    close(client->GetSocket());
+    FD_CLR(client->GetSocket(), &this->master);
 }
 
 void Server::Listen(int queueSize)

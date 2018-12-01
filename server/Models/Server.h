@@ -25,7 +25,7 @@ public:
     explicit Server();
     void CreateServer(int port, int queueSize);
     Client* AddClient();
-    void RemoveClient(int socket);
+    void RemoveClient(Client *client);
     void WriteToAllClients(std::string message, int exclude = 0);
     void WriteToClient(Client *client, std::string message);
     int GetSocket();

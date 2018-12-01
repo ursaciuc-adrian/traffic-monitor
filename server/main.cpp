@@ -1,13 +1,8 @@
 #include <sys/types.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 #include <iostream>
 #include "../Shared/CommunicationHelper.h"
 #include "Models/Server.cpp"
-
-using namespace std;
 
 #define PORT 2026
 
@@ -28,19 +23,23 @@ int main()
             string welcomeMsg = "Welcome to the Awesome Chat Server!\r\n";
 
             server->WriteToClient(client, welcomeMsg);
-            server->WriteToAllClients("new fish boys..\r\n", client->GetSocket());
+            server->WriteToAllClients("new fish boys..", client->GetSocket());
         }
 
         for (auto *client: server->clients)
         {
             if (FD_ISSET(client->GetSocket(), &copy))
             {
-                string buf;
+                std::string buf;
 
-                Read(client->GetSocket(), buf);
-
-                printf("Mesaj de la %d: %s\n", client->GetSocket(), buf.c_str());
-                server->WriteToAllClients(buf, client->GetSocket());
+                if(Read(client->GetSocket(), buf) == 0)
+                {
+                    server->RemoveClient(client);
+                }
+                else
+                {
+                    server->WriteToAllClients(buf, client->GetSocket());
+                }
             }
         }
     }

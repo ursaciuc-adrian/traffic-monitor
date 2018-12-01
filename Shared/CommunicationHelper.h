@@ -48,12 +48,13 @@ static int Read(int socket, std::string &str)
 */
 
     char buf[200];
-    read(socket, &buf, 200);
+
+    int code = read(socket, &buf, 200);
 
     std::string resp(buf);
     str = resp;
 
-    return 0;
+    return code;
 }
 
 static int CreateSocket()
