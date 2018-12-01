@@ -26,7 +26,8 @@ int main()
             int client = server->AddClient();
 
             string welcomeMsg = "Welcome to the Awesome Chat Server!\r\n";
-            Write(client, welcomeMsg);
+            // Write(client, welcomeMsg);
+            write(client, welcomeMsg.c_str(), welcomeMsg.size() + 1);
 
             server->WriteToAllClients("new fish boys..\r\n", client);
         }
@@ -37,9 +38,12 @@ int main()
             {
                 string buf;
 
-                Read(client->GetSocket(), buf);
-                printf("Mesaj de la %d: %s\n", client->GetSocket(), buf.c_str());
-                server->WriteToAllClients(buf, client->GetSocket());
+               // Read(client->GetSocket(), buf);
+                char buff[200];
+                read(client->GetSocket(), buff, 200);
+                string buff2(buff);
+                printf("Mesaj de la %d: %s\n", client->GetSocket(), buff);
+                server->WriteToAllClients(buff2, client->GetSocket());
             }
         }
     }

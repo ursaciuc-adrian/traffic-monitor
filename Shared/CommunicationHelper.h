@@ -7,7 +7,7 @@
 
 static int Write(int socket, const std::string &str)
 {
-    unsigned long length = str.length();
+    /*unsigned long length = str.length();
     if(write(socket, &length, sizeof(length)) == -1)
     {
         perror("erroare la write");
@@ -19,14 +19,15 @@ static int Write(int socket, const std::string &str)
         perror("erroare la write");
 
         return -1;
-    }
+    }*/
 
+    write(socket, str.c_str(), 100);
     return 0;
 }
 
 static int Read(int socket, std::string &str)
 {
-    unsigned long length;
+    /*unsigned long length;
     if(read(socket, &length, sizeof(length)) == -1)
     {
         perror("erroare la read");
@@ -44,6 +45,13 @@ static int Read(int socket, std::string &str)
 
     buffer[length] = '\0';
     str = buffer.data();
+*/
+
+    char buf[200];
+    read(socket, buf, 200);
+
+    std::string resp(buf);
+    str = resp;
 
     return 0;
 }

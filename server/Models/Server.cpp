@@ -78,14 +78,18 @@ void Server::Bind()
 
 void Server::WriteToAllClients(std::string message, int exclude)
 {
+    message += "\r\n";
     for (auto *client: clients)
     {
         if(client->GetSocket() == exclude)
         {
             continue;
         }
-        printf("Sending to %d\n", client->GetSocket());
-        Write(client->GetSocket(), message);
+        printf("Sending to %d this messaje: %s\n", client->GetSocket(), message.c_str());
+
+        write(client->GetSocket(), message.c_str(), 20);
+
+      //  Write(client->GetSocket(), message);
     }
 }
 

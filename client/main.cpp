@@ -33,14 +33,18 @@ int main(int argc, char *argv[])
             while (true)
             {
                 std::getline(std::cin, request);
-                Write(client->GetSocket(), request);
+
+                write(client->GetSocket(), request.c_str(), request.size() + 1);
+                // Write(client->GetSocket(), request);
             }
 
         default:
             while (true)
             {
-                Read(client->GetSocket(), response);
-                cout << response;
+                char buff[200];
+                read(client->GetSocket(), buff, 200);
+                // Read(client->GetSocket(), response);
+                cout << buff;
             }
     }
 
