@@ -18,27 +18,22 @@ int main()
 
         if (FD_ISSET(server->GetSocket(), &copy))
         {
-            auto* client = server->AddClient();
-
-            string welcomeMsg = "Welcome to the Awesome Chat Server!\r\n";
-
-            server->WriteToClient(client, welcomeMsg);
-            server->WriteToAllClients("new fish boys..", client->GetSocket());
+            server->AddClient();
         }
 
-        for (auto *client: server->clients)
+        for (auto *client: server->GetClients())
         {
             if (FD_ISSET(client->GetSocket(), &copy))
             {
-                std::string buf;
+                std::string message;
 
-                if(Read(client->GetSocket(), buf) == 0)
+                if(Read(client->GetSocket(), message) == 0)
                 {
                     server->RemoveClient(client);
                 }
                 else
                 {
-                    server->WriteToAllClients(buf, client->GetSocket());
+                    server->WriteToAllClients(message, client->GetSocket());
                 }
             }
         }

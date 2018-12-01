@@ -1,8 +1,7 @@
-#include <utility>
-
 #pragma once
 
 #include <strings.h>
+
 #include "../../Shared/CommunicationHelper.h"
 #include "Server.h"
 #include "Client.cpp"
@@ -23,9 +22,11 @@ void Server::CreateServer(int port, int queueSize)
 
     FD_SET(this->socket, &this->master);
     this->nfds = this->socket;
+
+    std::cout << "The server started on port " << port << std::endl;
 }
 
-Client* Server::AddClient()
+void Server::AddClient()
 {
     int socket = accept(this->socket, nullptr, nullptr);
 
@@ -34,17 +35,20 @@ Client* Server::AddClient()
 
     FD_SET(socket, &this->master);
 
-    this->nfds = max(this->nfds, socket);
+    this->nfds = std::max(this->nfds, socket);
 
-    return client;
+    std::cout << "#" << client->GetSocket() <<" | A new client connected to the server." << std::endl;
+
+    std::string welcomeMessage = "#" + std::to_string(client->GetSocket()) + " | You are now connected to the server.";
+    this->WriteToClient(client, welcomeMessage);
 }
 
 void Server::RemoveClient(Client *client)
 {
     int index = -1;
-    for (int i = 0; i < this->clients.size() - 1; ++i)
+    for (int i = 0; i < this->clients.size(); ++i)
     {
-        if(this->clients[i]->GetSocket() == socket)
+        if(this->clients[i]->GetSocket() == client->GetSocket())
         {
             index = i;
             break;
@@ -54,10 +58,16 @@ void Server::RemoveClient(Client *client)
     if(index != -1)
     {
         this->clients.erase(this->clients.begin() + index);
-    }
 
-    close(client->GetSocket());
-    FD_CLR(client->GetSocket(), &this->master);
+        close(client->GetSocket());
+        FD_CLR(client->GetSocket(), &this->master);
+
+        std::cout << "#" << client->GetSocket() <<" | A client disconnected from the server." << std::endl;
+    }
+    else
+    {
+        // TODO: Handle error
+    }
 }
 
 void Server::Listen(int queueSize)
@@ -78,13 +88,13 @@ void Server::Bind()
 
 void Server::WriteToAllClients(std::string message, int exclude)
 {
-    for (auto *client: clients)
+    for (auto *client: this->clients)
     {
         if(client->GetSocket() == exclude)
         {
             continue;
         }
-        printf("Sending to %d this messaje: %s\n", client->GetSocket(), message.c_str());
+
         this->WriteToClient(client, message);
     }
 }
@@ -109,6 +119,11 @@ void Server::Select(fd_set &masterCopy)
 void Server::WriteToClient(Client *client, std::string message)
 {
     Write(client->GetSocket(), std::move(message));
+}
+
+const std::vector<Client *> Server::GetClients()
+{
+    return this->clients;
 }
 
 Server::~Server()
