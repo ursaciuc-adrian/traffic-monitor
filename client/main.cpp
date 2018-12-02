@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     auto *server = new Server(argv[1], std::stoi(argv[2]));
 
     auto *client = new Client(CreateSocket());
-    client->ConnectToServer(server);
+    client->connectToServer(server);
 
     std::string request;
     std::string response;
@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
             {
                 std::getline(std::cin, request);
 
-                write(client->GetSocket(), request.c_str(), request.size() + 1);
+                write(client->getSocket(), request.c_str(), request.size() + 1);
                 // Write(client->GetSocket(), request);
             }
 
@@ -42,13 +42,13 @@ int main(int argc, char *argv[])
             while (true)
             {
                 char buff[200];
-                read(client->GetSocket(), buff, 200);
+                read(client->getSocket(), buff, 200);
                 // Read(client->GetSocket(), response);
                 cout << buff;
             }
     }
 
-    close(client->GetSocket());
+    close(client->getSocket());
 
     return 0;
 }

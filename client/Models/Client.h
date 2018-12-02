@@ -5,11 +5,12 @@
 
 class Client
 {
-    int socket;
+    int m_socket;
+
 public:
     explicit Client(int socket);
-    void ConnectToServer(Server *server);
+    void connectToServer(Server *server);
 
-    int GetSocket();
+    int getSocket() const;
 };
 

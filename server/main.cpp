@@ -9,31 +9,31 @@
 int main()
 {
     auto *server = new Server();
-    server->CreateServer(PORT, 5);
+    server->createServer(PORT, 5);
 
     while (true)
     {
         fd_set copy;
-        server->Select(copy);
+        server->select(copy);
 
-        if (FD_ISSET(server->GetSocket(), &copy))
+        if (FD_ISSET(server->getSocket(), &copy))
         {
-            server->AddClient();
+            server->addClient();
         }
 
-        for (auto *client: server->GetClients())
+        for (auto *client: server->getClients())
         {
-            if (FD_ISSET(client->GetSocket(), &copy))
+            if (FD_ISSET(client->getSocket(), &copy))
             {
                 std::string message;
 
-                if(Read(client->GetSocket(), message) == 0)
+                if(Read(client->getSocket(), message) == 0)
                 {
-                    server->RemoveClient(client);
+                    server->removeClient(client);
                 }
                 else
                 {
-                    server->WriteToAllClients(message, client->GetSocket());
+                    server->writeToAllClients(message, client->getSocket());
                 }
             }
         }

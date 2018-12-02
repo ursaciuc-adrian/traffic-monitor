@@ -3,10 +3,9 @@
 #include "Client.h"
 #include "Server.h"
 
-void Client::ConnectToServer(Server *server)
+void Client::connectToServer(Server *server)
 {
-    /* ne conectam la server */
-    if (connect(socket, (struct sockaddr *)&server->server, sizeof(struct sockaddr)) == -1)
+    if (connect(m_socket, (struct sockaddr *)&server->server, sizeof(struct sockaddr)) == -1)
     {
         perror("[client]Eroare la connect().\n");
     }
@@ -14,10 +13,10 @@ void Client::ConnectToServer(Server *server)
 
 Client::Client(int socket)
 {
-    this->socket = socket;
+    this->m_socket = socket;
 }
 
-int Client::GetSocket()
+int Client::getSocket() const
 {
-    return this->socket;
+    return this->m_socket;
 }

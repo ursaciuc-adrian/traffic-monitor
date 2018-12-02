@@ -10,29 +10,29 @@
 class Server
 {
 private:
-    struct sockaddr_in server;
-    std::vector<Client *> clients;
+    struct sockaddr_in m_server;
+    std::vector<Client *> m_clients;
 
-    int socket;
-    int nfds;
-    fd_set master;
+    int m_socket;
+    int m_nfds;
+    fd_set m_master;
 
-    void Listen(int queueSize);
-    void Bind();
+    void m_listen(int queueSize);
+    void m_bind();
 
 public:
     explicit Server();
-    void CreateServer(int port, int queueSize);
-    void Select(fd_set &masterCopy);
+    void createServer(int port, int queueSize);
+    void select(fd_set &masterCopy);
 
-    void AddClient();
-    void RemoveClient(Client *client);
+    void addClient();
+    void removeClient(Client *client);
 
-    void WriteToAllClients(std::string message, int exclude = 0);
-    void WriteToClient(Client *client, std::string message);
+    void writeToAllClients(std::string message, int exclude = 0);
+    void writeToClient(Client *client, std::string message);
 
-    int GetSocket();
-    const std::vector<Client *> GetClients();
+    int getSocket() const;
+    const std::vector<Client *> getClients() const;
 
     ~Server();
 };

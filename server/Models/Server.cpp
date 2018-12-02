@@ -6,49 +6,49 @@
 #include "Server.h"
 #include "Client.cpp"
 
-void Server::CreateServer(int port, int queueSize)
+void Server::createServer(int port, int queueSize)
 {
-    this->socket = CreateSocket();
+    this->m_socket = CreateSocket();
 
     int optval = 1;
-    setsockopt(this->socket, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
+    setsockopt(this->m_socket, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
 
-    this->server.sin_family = AF_INET;
-    this->server.sin_addr.s_addr = htonl(INADDR_ANY);
-    this->server.sin_port = htons(static_cast<uint16_t>(port));
+    this->m_server.sin_family = AF_INET;
+    this->m_server.sin_addr.s_addr = htonl(INADDR_ANY);
+    this->m_server.sin_port = htons(static_cast<uint16_t>(port));
 
-    this->Bind();
-    this->Listen(queueSize);
+    this->m_bind();
+    this->m_listen(queueSize);
 
-    FD_SET(this->socket, &this->master);
-    this->nfds = this->socket;
+    FD_SET(this->m_socket, &this->m_master);
+    this->m_nfds = this->m_socket;
 
     std::cout << "The server started on port " << port << std::endl;
 }
 
-void Server::AddClient()
+void Server::addClient()
 {
-    int socket = accept(this->socket, nullptr, nullptr);
+    int socket = accept(this->m_socket, nullptr, nullptr);
 
     auto *client = new Client(socket, "127.0.0.1", 2026);
-    this->clients.push_back(client);
+    this->m_clients.push_back(client);
 
-    FD_SET(socket, &this->master);
+    FD_SET(socket, &this->m_master);
 
-    this->nfds = std::max(this->nfds, socket);
+    this->m_nfds = std::max(this->m_nfds, socket);
 
-    std::cout << "#" << client->GetSocket() <<" | A new client connected to the server." << std::endl;
+    std::cout << "#" << client->getSocket() <<" | A new client connected to the server." << std::endl;
 
-    std::string welcomeMessage = "#" + std::to_string(client->GetSocket()) + " | You are now connected to the server.";
-    this->WriteToClient(client, welcomeMessage);
+    std::string welcomeMessage = "#" + std::to_string(client->getSocket()) + " | You are now connected to the server.";
+    this->writeToClient(client, welcomeMessage);
 }
 
-void Server::RemoveClient(Client *client)
+void Server::removeClient(Client *client)
 {
     int index = -1;
-    for (int i = 0; i < this->clients.size(); ++i)
+    for (int i = 0; i < this->m_clients.size(); ++i)
     {
-        if(this->clients[i]->GetSocket() == client->GetSocket())
+        if(this->m_clients[i]->getSocket() == client->getSocket())
         {
             index = i;
             break;
@@ -57,12 +57,12 @@ void Server::RemoveClient(Client *client)
 
     if(index != -1)
     {
-        this->clients.erase(this->clients.begin() + index);
+        this->m_clients.erase(this->m_clients.begin() + index);
 
-        close(client->GetSocket());
-        FD_CLR(client->GetSocket(), &this->master);
+        close(client->getSocket());
+        FD_CLR(client->getSocket(), &this->m_master);
 
-        std::cout << "#" << client->GetSocket() <<" | A client disconnected from the server." << std::endl;
+        std::cout << "#" << client->getSocket() <<" | A client disconnected from the server." << std::endl;
     }
     else
     {
@@ -70,60 +70,60 @@ void Server::RemoveClient(Client *client)
     }
 }
 
-void Server::Listen(int queueSize)
+void Server::m_listen(int queueSize)
 {
-    if (listen(this->socket, queueSize) == -1)
+    if (listen(this->m_socket, queueSize) == -1)
     {
          perror("[Server]Error at listen().\n");
     }
 }
 
-void Server::Bind()
+void Server::m_bind()
 {
-    if (bind(this->socket, (struct sockaddr *) &this->server, sizeof(struct sockaddr)) == -1)
+    if (bind(this->m_socket, (struct sockaddr *) &this->m_server, sizeof(struct sockaddr)) == -1)
     {
         perror("[Server]Error at bind().\n");
     }
 }
 
-void Server::WriteToAllClients(std::string message, int exclude)
+void Server::writeToAllClients(std::string message, int exclude)
 {
-    for (auto *client: this->clients)
+    for (auto *client: this->m_clients)
     {
-        if(client->GetSocket() == exclude)
+        if(client->getSocket() == exclude)
         {
             continue;
         }
 
-        this->WriteToClient(client, message);
+        this->writeToClient(client, message);
     }
 }
 
-int Server::GetSocket()
+int Server::getSocket() const
 {
-    return this->socket;
+    return this->m_socket;
 }
 
 Server::Server()
 {
-    bzero(&this->server, sizeof(this->server));
-    FD_ZERO(&this->master);
+    bzero(&this->m_server, sizeof(this->m_server));
+    FD_ZERO(&this->m_master);
 }
 
-void Server::Select(fd_set &masterCopy)
+void Server::select(fd_set &masterCopy)
 {
-    masterCopy = this->master;
-    select(this->nfds + 1, &masterCopy, nullptr, nullptr, nullptr);
+    masterCopy = this->m_master;
+    ::select(this->m_nfds + 1, &masterCopy, nullptr, nullptr, nullptr);
 }
 
-void Server::WriteToClient(Client *client, std::string message)
+void Server::writeToClient(Client *client, std::string message)
 {
-    Write(client->GetSocket(), std::move(message));
+    Write(client->getSocket(), std::move(message));
 }
 
-const std::vector<Client *> Server::GetClients()
+const std::vector<Client *> Server::getClients() const
 {
-    return this->clients;
+    return this->m_clients;
 }
 
 Server::~Server()
