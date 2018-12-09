@@ -1,17 +1,17 @@
 #include <iostream>
 #include <string>
+#include <strings.h>
+#include <cstring>
 
 #include "../Shared/CommunicationHelper.h"
 #include "Models/Client.cpp"
 #include "Models/Server.cpp"
 
-using namespace std;
-
 int main(int argc, char *argv[])
 {
     if (argc != 3)
     {
-        printf("Sintaxa: %s <adresa_server> <port>\n", argv[0]);
+        printf("Sintax: %s <server_ip> <port>\n", argv[0]);
         return -1;
     }
 
@@ -20,35 +20,41 @@ int main(int argc, char *argv[])
     auto *client = new Client(CreateSocket());
     client->connectToServer(server);
 
-    std::string request;
-    std::string response;
+    bool running = true;
 
-    switch (fork())
+    while(running)
     {
-        case -1:
-            perror("fork");
-            exit(1);
+        fd_set copy;
+        client->select(copy);
 
-        case 0:
-            while (true)
+        for (int fd = 0; fd <= client->getSocket(); fd++)
+        {
+            if(FD_ISSET(fd, &copy))
             {
-                std::getline(std::cin, request);
+                std::string message;
+                Read(fd, message);
 
-                write(client->getSocket(), request.c_str(), request.size() + 1);
-                // Write(client->GetSocket(), request);
-            }
+                if (fd == 0)
+                {
+                    printf("Sending message to server: %d-- %s --", static_cast<int>(message.length()), message.c_str());
+                    Write(client->getSocket(), message);
+                }
+                else
+                {
+                    printf("Received from server: -- %s --", message.c_str());
+                }
 
-        default:
-            while (true)
-            {
-                char buff[200];
-                read(client->getSocket(), buff, 200);
-                // Read(client->GetSocket(), response);
-                cout << buff;
+                if(message == "quit")
+                {
+                    printf("Closing the client. Bye!\n");
+                    running = false;
+                }
             }
+        }
     }
 
-    close(client->getSocket());
+    std::cout << "Closing the socket\n";
+    client->close();
 
     return 0;
 }
