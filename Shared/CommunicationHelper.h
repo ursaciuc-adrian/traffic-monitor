@@ -6,63 +6,71 @@
 #include <vector>
 #include <netinet/in.h>
 
-static int Write(int socket, std::string str)
+static void NormalizeString(std::string &str)
 {
-    /*unsigned long length = str.length();
+    if (str[str.length() - 1] == '\n')
+    {
+        str = str.substr(0, str.length() - 1);
+    }
+}
+
+static int Write(int socket, std::string &str)
+{
+    NormalizeString(str);
+
+    unsigned long length = str.length();
     if(write(socket, &length, sizeof(length)) == -1)
     {
-        perror("erroare la write");
         return -1;
     }
 
     if(write(socket, str.c_str(), length) == -1)
     {
-        perror("erroare la write");
-
         return -1;
-    }*/
+    }
 
-    if (str[str.length() - 1] == '\n')
-        str = str.substr(0, str.length() - 1);
-
-    write(socket, str.c_str(), 100);
-
-    return 0;
+    return 1;
 }
 
 static int Read(int socket, std::string &str)
 {
-    /*unsigned long length;
-    if(read(socket, &length, sizeof(length)) == -1)
-    {
-        perror("erroare la read");
+    unsigned long length;
+    int bytes;
 
+    if(socket == 0)
+    {
+        length = 1024;
+    }
+    else
+    {
+        if((bytes = read(socket, &length, sizeof(length))) == -1)
+        {
+            return -1;
+        }
+
+        if(bytes == 0)
+        {
+            return 0;
+        }
+    }
+
+    char buf[length + 1];
+    bzero(buf, length + 1);
+
+    if((bytes = read(socket, &buf, length)) == -1)
+    {
         return -1;
     }
 
-    std::vector<char> buffer(length + 1);
-    if(read(socket, buffer.data(), length) == -1)
+    if(bytes == 0)
     {
-        perror("erroare la read");
-
-        return -1;
+        return 0;
     }
 
-    buffer[length] = '\0';
-    str = buffer.data();
-*/
+    str.assign(buf);
+    NormalizeString(str);
 
-    char buf[200];
-    bzero(buf, 200);
-
-    int code = read(socket, &buf, 200);
-
-    std::string resp(buf);
-    str = resp;
-    if (str[str.length() - 1] == '\n')
-        str = str.substr(0, str.length() - 1);
-
-    return code;
+    return 1;
 }
 
 static int CreateSocket()

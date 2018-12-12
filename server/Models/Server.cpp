@@ -118,7 +118,7 @@ void Server::select(fd_set &masterCopy)
 
 void Server::writeToClient(Client *client, std::string message)
 {
-    Write(client->getSocket(), std::move(message));
+    Write(client->getSocket(), message);
 }
 
 const std::vector<Client *> Server::getClients() const
