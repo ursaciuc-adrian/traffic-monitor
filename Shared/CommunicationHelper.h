@@ -2,6 +2,7 @@
 
 #include <unistd.h>
 #include <string>
+#include <string.h>
 #include <vector>
 #include <netinet/in.h>
 
@@ -20,8 +21,12 @@ static int Write(int socket, std::string str)
 
         return -1;
     }*/
-    str += "\r\n";
+
+    if (str[str.length() - 1] == '\n')
+        str = str.substr(0, str.length() - 1);
+
     write(socket, str.c_str(), 100);
+
     return 0;
 }
 
@@ -48,11 +53,14 @@ static int Read(int socket, std::string &str)
 */
 
     char buf[200];
+    bzero(buf, 200);
 
     int code = read(socket, &buf, 200);
 
     std::string resp(buf);
     str = resp;
+    if (str[str.length() - 1] == '\n')
+        str = str.substr(0, str.length() - 1);
 
     return code;
 }
@@ -67,17 +75,4 @@ static int CreateSocket()
     }
 
     return sd;
-}
-
-static int Fork()
-{
-    int f;
-
-    if((f = fork()) == -1)
-    {
-        perror("Error at fork().\n");
-        exit(0);
-    }
-
-    return f;
 }

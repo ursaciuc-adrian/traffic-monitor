@@ -36,12 +36,12 @@ int main(int argc, char *argv[])
 
                 if (fd == 0)
                 {
-                    printf("Sending message to server: %d-- %s --", static_cast<int>(message.length()), message.c_str());
+                    std::cout << "Sending message to server: " << message << std::endl;
                     Write(client->getSocket(), message);
                 }
                 else
                 {
-                    printf("Received from server: -- %s --", message.c_str());
+                    std::cout << "Received from server: " << message << std::endl;
                 }
 
                 if(message == "quit")
