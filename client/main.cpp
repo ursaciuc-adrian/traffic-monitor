@@ -15,13 +15,22 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+    srand(time(nullptr));
     auto *server = new Server(argv[1], std::stoi(argv[2]));
 
-    auto *client = new Client(CreateSocket());
+    auto *client = new Client(CreateSocket(), "bv88hhy");
     client->connectToServer(server);
 
-    bool running = true;
+    if (fork() == 0)
+    {
+        while(true)
+        {
+            client->updateSpeed();
+            sleep(10);
+        }
+    }
 
+    bool running = true;
     while(running)
     {
         fd_set copy;
@@ -41,7 +50,7 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-                    std::cout << "Received from server: " << message << std::endl;
+                    std::cout << message << std::endl;
                 }
 
                 if(message == "quit")

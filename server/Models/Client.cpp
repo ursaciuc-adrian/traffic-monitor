@@ -18,3 +18,8 @@ int Client::getSocket()
 {
     return this->m_socket;
 }
+
+void Client::setSpeed(int speed)
+{
+    this->m_speed = speed;
+}

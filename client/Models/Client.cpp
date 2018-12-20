@@ -1,3 +1,5 @@
+#include <utility>
+
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include "Client.h"
@@ -11,13 +13,15 @@ void Client::connectToServer(Server *server)
     }
 }
 
-Client::Client(int socket)
-    : m_socket(socket)
+Client::Client(int socket, std::string licensePlate)
+    : m_socket(socket), m_licensePlate(std::move(licensePlate))
 {
     FD_ZERO(&this->m_master);
 
     FD_SET(0, &this->m_master);
     FD_SET(this->m_socket, &this->m_master);
+
+    this->updateSpeed();
 }
 
 int Client::getSocket() const
@@ -34,4 +38,29 @@ void Client::select(fd_set &masterCopy)
 void Client::close()
 {
     ::close(this->m_socket);
+}
+
+void Client::updateSpeed(int speed)
+{
+    if(speed == -1)
+    {
+        int range = 20 - 100 + 1;
+        m_speed = rand() % range + 20;
+    }
+    else
+    {
+        m_speed = speed;
+    }
+
+    this->write("update_speed " + std::to_string(this->m_speed));
+}
+
+int Client::getSpeed() const
+{
+    return m_speed;
+}
+
+void Client::write(std::string message)
+{
+    Write(this->getSocket(), message);
 }
