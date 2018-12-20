@@ -8,6 +8,7 @@
 #include "Helpers/Deserializer.h"
 #include "Handlers/Handler.h"
 #include "Handlers/SpeedHandler.h"
+#include "Handlers/AccidentHandler.h"
 
 #define PORT 2026
 
@@ -44,9 +45,11 @@ Response HandleCommand(const std::string &str, Client *client)
 
 int main()
 {
-    handlers.push_back(new SpeedHandler());
-
     auto *server = new Server();
+
+    handlers.push_back(new SpeedHandler(server));
+    handlers.push_back(new AccidentHandler(server));
+
     server->createServer(PORT, 5);
 
     while (true)

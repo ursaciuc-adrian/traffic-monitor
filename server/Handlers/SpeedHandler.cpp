@@ -4,7 +4,10 @@
 
 #include "SpeedHandler.h"
 
-SpeedHandler::SpeedHandler() = default;
+SpeedHandler::SpeedHandler(Server *server)
+    : Handler(server)
+{
+}
 
 bool SpeedHandler::canHandle(const Command *com)
 {

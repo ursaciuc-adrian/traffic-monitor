@@ -3,14 +3,17 @@
 #include "../Models/Command.h"
 #include "../Models/Response.h"
 #include "../Models/Client.h"
+#include "../Models/Server.h"
 
 class Handler
 {
 protected:
     const Command *m_command{};
     Response m_response;
+    Server *m_server;
 public:
-    explicit Handler()
+    explicit Handler(Server *server)
+        :m_server(server)
     {
         this->m_response = Response();
     };

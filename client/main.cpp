@@ -45,8 +45,7 @@ int main(int argc, char *argv[])
 
                 if (fd == 0)
                 {
-                    std::cout << "Sending message to server: " << message << std::endl;
-                    Write(client->getSocket(), message);
+                    client->write(message);
                 }
                 else
                 {
