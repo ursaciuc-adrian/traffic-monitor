@@ -32,11 +32,15 @@ bool LicensePlateHandler::canHandle(const Command *com)
 
 void LicensePlateHandler::handle(Client *client)
 {
-    client->setLicensePlate(this->m_command->getArgument(0)->getValue());
+    std::string licensePlate = this->m_command->getArgument(0)->getValue();
+    client->setLicensePlate(licensePlate);
 
-    JsonHelper::AddClient(client);
+    if(!JsonHelper::getClient(licensePlate, client))
+    {
+        JsonHelper::addClient(client);
+    }
 
-    m_response = Response("License plate was set to " + this->m_command->getArgument(0)->getValue() + ".", Success);
+    m_response = Response("License plate was set to " + licensePlate + ".", Success);
 }
 
 

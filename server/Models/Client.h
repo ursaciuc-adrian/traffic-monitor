@@ -19,7 +19,8 @@ public:
     void setSpeed(int speed);
     void setLicensePlate(std::string licensePlate);
     void addSubscription(std::string subscription);
-
+    bool hasSubscription(std::string subscription);
+    std::vector<std::string> getSubscriptions();
     ~Client();
 
     std::string getLicensePlate();

@@ -36,10 +36,17 @@ bool NotifierHandler::canHandle(const Command *com)
     return false;
 }
 
-void NotifierHandler::handle(Client *client)
+void NotifierHandler::handle(Client *)
 {
-    m_server->writeToAllClients("notification.");
-    m_response = Response("Notifications not implemented.", Success);
+    for(auto client: this->m_server->getClients())
+    {
+        if(client->hasSubscription(this->m_command->getArgument(0)->getValue()))
+        {
+            this->m_server->writeToClient(client, this->m_command->getArgument(1)->getValue());
+        }
+    }
+
+    m_response = Response("Notification sent.", Success);
 }
 
 

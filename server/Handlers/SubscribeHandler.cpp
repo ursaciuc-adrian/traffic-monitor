@@ -3,6 +3,7 @@
 #include <cstring>
 
 #include "SubscribeHandler.h"
+#include "../Helpers/JsonHelper.h"
 
 SubscribeHandler::SubscribeHandler(Server *server)
         : Handler(server)
@@ -31,7 +32,17 @@ bool SubscribeHandler::canHandle(const Command *com)
 
 void SubscribeHandler::handle(Client *client)
 {
-    m_response = Response("Subscribe function not implemented.", Success);
+    std::string subscription = this->m_command->getArgument(0)->getValue();
+    if(client->hasSubscription(subscription))
+    {
+        m_response = Response("You are already subscribed to this service.", Success);
+        return;
+    }
+
+    client->addSubscription(subscription);
+    JsonHelper::updateClient(client);
+
+    m_response = Response("Successfully subscribed to " + subscription + ".", Success);
 }
 
 
