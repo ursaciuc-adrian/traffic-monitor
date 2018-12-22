@@ -4,10 +4,10 @@
 #include "Handler.h"
 #include "../Models/Client.h"
 
-class SpeedHandler: public Handler
+class LicensePlateHandler: public Handler
 {
 public:
-    explicit SpeedHandler(Server *server);
+    explicit LicensePlateHandler(Server *server);
 
     bool canHandle(const Command *command) override;
     void handle(Client *client) override;

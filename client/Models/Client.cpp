@@ -64,3 +64,27 @@ void Client::write(std::string message)
 {
     Write(this->getSocket(), message);
 }
+
+std::string Client::generateLicensePlate()
+{
+    std::string licensePlate;
+
+    licensePlate += 'A' + rand() % 26;
+    licensePlate += 'A' + rand() % 26;
+    licensePlate += std::to_string(rand() % 10);
+    licensePlate += std::to_string(rand() % 10);
+    licensePlate += 'A' + rand() % 26;
+    licensePlate += 'A' + rand() % 26;
+    licensePlate += 'A' + rand() % 26;
+
+    return licensePlate;
+}
+
+void Client::updateLicensePlate()
+{
+    if(this->m_licensePlate.empty())
+    {
+        this->m_licensePlate = generateLicensePlate();
+    }
+    this->write("update_licensePlate " + this->m_licensePlate);
+}

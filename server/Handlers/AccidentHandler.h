@@ -7,7 +7,7 @@
 class AccidentHandler: public Handler
 {
 public:
-    AccidentHandler(Server *server);
+    explicit AccidentHandler(Server *server);
 
     bool canHandle(const Command *command) override;
     void handle(Client *client) override;

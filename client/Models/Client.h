@@ -22,5 +22,8 @@ public:
     int getSpeed() const;
 
     void updateSpeed(int speed = -1);
+    void updateLicensePlate();
+
+    std::string generateLicensePlate();
 };
 

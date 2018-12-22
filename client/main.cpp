@@ -11,22 +11,27 @@ int main(int argc, char *argv[])
 {
     if (argc != 3)
     {
-        printf("Sintax: %s <server_ip> <port>\n", argv[0]);
+        printf("Sintax: %s <server_ip> <port> <license_plate>(optional)\n", argv[0]);
         return -1;
     }
 
     srand(time(nullptr));
     auto *server = new Server(argv[1], std::stoi(argv[2]));
-
-    auto *client = new Client(CreateSocket(), "bv88hhy");
+    std::string licensePlate;
+    if(argv[3] != nullptr)
+    {
+        licensePlate.assign(argv[3]);
+    }
+    auto *client = new Client(CreateSocket(), licensePlate);
     client->connectToServer(server);
+    client->updateLicensePlate();
 
     if (fork() == 0)
     {
         while(true)
         {
             client->updateSpeed();
-            sleep(10);
+            sleep(60);
         }
     }
 
@@ -61,7 +66,6 @@ int main(int argc, char *argv[])
         }
     }
 
-    std::cout << "Closing the socket\n";
     client->close();
 
     return 0;

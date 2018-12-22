@@ -7,9 +7,10 @@
 
 #include "../Models/Command.h"
 
-static const Command* deserializeInput(const std::string &inputString)
+static const Command* deserializeInput(std::string inputString)
 {
     auto *command = new Command();
+    std::string arg;
 
     std::istringstream iss(inputString);
     std::string token;

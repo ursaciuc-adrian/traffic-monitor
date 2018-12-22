@@ -22,3 +22,14 @@ const Argument * Command::getArgument(unsigned long index) const
 
     return nullptr;
 }
+
+void Command::processArguments()
+{
+    for (auto c: this->m_arguments)
+    {
+        if(c->getValue()[0] == '"')
+        {
+
+        }
+    }
+}

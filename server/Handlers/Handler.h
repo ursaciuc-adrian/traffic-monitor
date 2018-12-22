@@ -11,11 +11,14 @@ protected:
     const Command *m_command{};
     Response m_response;
     Server *m_server;
+    bool m_forClient;
+
 public:
-    explicit Handler(Server *server)
+    explicit Handler(Server *server, bool forClient = true)
         :m_server(server)
     {
         this->m_response = Response();
+        this->m_forClient = forClient;
     };
 
     ~Handler() = default;

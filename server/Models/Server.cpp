@@ -5,6 +5,7 @@
 #include "../../Shared/CommunicationHelper.h"
 #include "Server.h"
 #include "Client.cpp"
+#include "../Helpers/JsonHelper.h"
 
 void Server::createServer(int port, int queueSize)
 {
@@ -20,6 +21,7 @@ void Server::createServer(int port, int queueSize)
     this->m_bind();
     this->m_listen(queueSize);
 
+    FD_SET(0, &this->m_master);
     FD_SET(this->m_socket, &this->m_master);
     this->m_nfds = this->m_socket;
 

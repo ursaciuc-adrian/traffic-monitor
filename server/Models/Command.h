@@ -15,5 +15,6 @@ public:
     explicit Command(std::string command);
 
     void addArgument(std::string arg);
+    void processArguments();
     const Argument * getArgument(unsigned long index) const;
 };

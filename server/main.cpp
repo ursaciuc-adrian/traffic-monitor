@@ -9,6 +9,10 @@
 #include "Handlers/Handler.h"
 #include "Handlers/SpeedHandler.h"
 #include "Handlers/AccidentHandler.h"
+#include "Handlers/SubscribeHandler.h"
+#include "Helpers/JsonHelper.h"
+#include "Handlers/NotifierHandler.h"
+#include "Handlers/LicensePlateHandler.h"
 
 #define PORT 2026
 
@@ -49,6 +53,9 @@ int main()
 
     handlers.push_back(new SpeedHandler(server));
     handlers.push_back(new AccidentHandler(server));
+    handlers.push_back(new SubscribeHandler(server));
+    handlers.push_back(new NotifierHandler(server));
+    handlers.push_back(new LicensePlateHandler(server));
 
     server->createServer(PORT, 5);
 
@@ -60,6 +67,14 @@ int main()
         if (FD_ISSET(server->getSocket(), &copy))
         {
             server->addClient();
+        }
+
+        if (FD_ISSET(0, &copy))
+        {
+            std::string message;
+            Read(0, message);
+            auto response = HandleCommand(message, nullptr);
+            std::cout << response.getValue() << std::endl;
         }
 
         for (auto *client: server->getClients())
@@ -77,7 +92,6 @@ int main()
                     auto response = HandleCommand(message, client);
 
                     server->writeToClient(client, response.getValue());
-                   // server->writeToAllClients(message, client->getSocket());
                 }
             }
         }
