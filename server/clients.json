@@ -35,6 +35,18 @@
         {
             "licensePlate": "JL31CVE",
             "subscriptions": []
+        },
+        {
+            "licensePlate": "RI80EGM",
+            "subscriptions": [
+                "gas"
+            ]
+        },
+        {
+            "licensePlate": "FN53PZC",
+            "subscriptions": [
+                "news"
+            ]
         }
     ]
 }

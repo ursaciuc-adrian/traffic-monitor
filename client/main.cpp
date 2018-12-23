@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     {
         licensePlate.assign(argv[3]);
     }
-    auto *client = new Client(CreateSocket(), "GV78VKK");
+    auto *client = new Client(CreateSocket(), licensePlate);
     client->connectToServer(server);
     client->updateLicensePlate();
 
