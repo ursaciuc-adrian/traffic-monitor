@@ -3,6 +3,8 @@
 #include <cstring>
 
 #include "SpeedHandler.h"
+#include "../Models/Street.h"
+#include "../Helpers/JsonHelper.h"
 
 SpeedHandler::SpeedHandler(Server *server)
     : Handler(server)
@@ -33,6 +35,14 @@ void SpeedHandler::handle(Client *client)
 {
     std::string speed = this->m_command->getArgument(0)->getValue();
     client->setSpeed(std::stoi(speed));
+
+    Street *street;
+    street = JsonHelper::getStreet(client->getLocation());
+
+    if(client->getSpeed() <= street->speedLimit / 2)
+    {
+        m_server->writeToAllClients("There might be heavy traffic on \"" + street->name + "\".", client->getSocket());
+    }
 
     m_response = Response("Speed was updated to " + speed + ".", Success);
 }

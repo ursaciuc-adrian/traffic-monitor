@@ -1,0 +1,33 @@
+{
+    "streets": [
+        {
+            "id": 1,
+            "name": "Str. Lapusneanu, nr.8",
+            "speedLimit": 50
+        },
+        {
+            "id": 2,
+            "name": "Str. Lapusneanu, nr.2",
+            "speedLimit": 30
+        },
+        {
+            "id": 3,
+            "name": "Str. Lapusneanu, nr.11",
+            "speedLimit": 30
+        }
+    ],
+    "connections": [
+        {
+            "street1": 2,
+            "street2": 3,
+            "street1-point": "end",
+            "street2-point": "start"
+        },
+        {
+            "street1": 1,
+            "street2": 3,
+            "street1-point": "end",
+            "street2-point": "end"
+        }
+    ]
+}

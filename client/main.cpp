@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
     {
         while(true)
         {
+            client->updateLocation();
             client->updateSpeed();
             sleep(60);
         }

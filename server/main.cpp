@@ -13,6 +13,7 @@
 #include "Helpers/JsonHelper.h"
 #include "Handlers/NotifierHandler.h"
 #include "Handlers/LicensePlateHandler.h"
+#include "Handlers/LocationHandler.h"
 
 #define PORT 2026
 
@@ -56,6 +57,8 @@ int main()
     handlers.push_back(new SubscribeHandler(server));
     handlers.push_back(new NotifierHandler(server));
     handlers.push_back(new LicensePlateHandler(server));
+    handlers.push_back(new LocationHandler(server));
+
 
     server->createServer(PORT, 5);
 

@@ -5,16 +5,46 @@
 #include <iomanip>
 #include "../Models/Client.h"
 #include "../Libs/json.hpp"
+#include "../Models/Street.h"
 
-#define DATABASE "../clients.json"
+
+#define CLIENTS "../clients.json"
+#define STREETS "../../Shared/streets.json"
 
 using json = nlohmann::json;
 
 class JsonHelper {
+    static json fileToJson(std::string path)
+    {
+        std::ifstream i(path);
+
+        json jsonFile = json::parse(i);
+        i.close();
+
+        return jsonFile;
+    }
 public:
+    static Street* getStreet(int id)
+    {
+        Street *street = new Street();
+        json streets = fileToJson(STREETS)["streets"];
+        for(const auto &s: streets)
+        {
+            if(s["id"] == id)
+            {
+                street->id = id;
+                street->name = s["name"];
+                street->speedLimit = s["speedLimit"];
+                return street;
+            }
+        }
+
+        return street;
+    }
+
     static void addClient(Client *client)
     {
-        std::ifstream i(DATABASE);
+        std::ifstream i(CLIENTS);
 
         json jsonFile = json::parse(i);
         i.close();
@@ -29,14 +59,14 @@ public:
 
         jsonFile["clients"] = clients;
 
-        std::ofstream o(DATABASE);
+        std::ofstream o(CLIENTS);
         o << std::setw(4) << jsonFile << std::endl;
         o.close();
     }
 
     static bool getClient(std::string licensePlate, Client *client)
     {
-        std::ifstream i(DATABASE);
+        std::ifstream i(CLIENTS);
 
         json jsonFile = json::parse(i);
         i.close();
@@ -60,7 +90,7 @@ public:
 
     static bool clientExists(Client *client)
     {
-        std::ifstream i(DATABASE);
+        std::ifstream i(CLIENTS);
 
         json jsonFile = json::parse(i);
         i.close();
@@ -80,7 +110,7 @@ public:
 
     static void updateClient(Client *client)
     {
-        std::ifstream i(DATABASE);
+        std::ifstream i(CLIENTS);
 
         json jsonFile = json::parse(i);
         i.close();
@@ -108,7 +138,7 @@ public:
 
         jsonFile["clients"] = clients;
 
-        std::ofstream o(DATABASE);
+        std::ofstream o(CLIENTS);
         o << std::setw(4) << jsonFile << std::endl;
         o.close();
     }

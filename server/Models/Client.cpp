@@ -58,3 +58,16 @@ std::vector<std::string> Client::getSubscriptions()
 {
     return this->m_subscriptions;
 }
+
+void Client::setLocation(int location)
+{
+    this->m_location = location;
+}
+
+int Client::getLocation() {
+    return this->m_location;
+}
+
+int Client::getSpeed() {
+   return this->m_speed;
+}

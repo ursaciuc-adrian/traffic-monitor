@@ -88,3 +88,8 @@ void Client::updateLicensePlate()
     }
     this->write("update_licensePlate " + this->m_licensePlate);
 }
+
+void Client::updateLocation()
+{
+    this->write("update_location " + std::to_string(1 + rand() % 3));
+}

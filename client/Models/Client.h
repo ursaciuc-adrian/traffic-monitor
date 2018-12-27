@@ -25,5 +25,7 @@ public:
     void updateLicensePlate();
 
     std::string generateLicensePlate();
+
+    void updateLocation();
 };
 
