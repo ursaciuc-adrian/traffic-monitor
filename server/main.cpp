@@ -1,6 +1,7 @@
 #include <sys/types.h>
 #include <stdlib.h>
 #include <iostream>
+#include <csignal>
 #include "../Shared/CommunicationHelper.h"
 #include "Models/Server.cpp"
 #include "Models/Response.h"
@@ -18,6 +19,7 @@
 #define PORT 2026
 
 std::vector<Handler*> handlers;
+Server *server;
 
 Response HandleCommand(const std::string &str, Client *client)
 {
@@ -48,9 +50,20 @@ Response HandleCommand(const std::string &str, Client *client)
     return Response("Command not found.", Error);
 }
 
+void SignalHandler(int signal)
+{
+    if(signal == SIGTERM)
+    {
+        server->writeToAllClients("The server went down.");
+        server->writeToAllClients("quit");
+    }
+}
+
 int main()
 {
-    auto *server = new Server();
+    signal(SIGTERM, SignalHandler);
+
+    server = new Server();
 
     handlers.push_back(new SpeedHandler(server));
     handlers.push_back(new AccidentHandler(server));

@@ -7,13 +7,26 @@
 #include "Models/Client.cpp"
 #include "Models/Server.cpp"
 
+void *UpdateSpeedAndLocation(void *ptr)
+{
+    while(true)
+    {
+        ((Client *) ptr)->updateLocation();
+        ((Client *) ptr)->updateSpeed();
+        sleep(60);
+    }
+}
+
 int main(int argc, char *argv[])
 {
+    pthread_t thread;
+
     if (argc != 3)
     {
         printf("Sintax: %s <server_ip> <port> <license_plate>(optional)\n", argv[0]);
         return -1;
     }
+
 
     srand(time(nullptr));
     auto *server = new Server(argv[1], std::stoi(argv[2]));
@@ -26,14 +39,9 @@ int main(int argc, char *argv[])
     client->connectToServer(server);
     client->updateLicensePlate();
 
-    if (fork() == 0)
+    if(pthread_create(&thread, NULL, UpdateSpeedAndLocation, (void*) client))
     {
-        while(true)
-        {
-            client->updateLocation();
-            client->updateSpeed();
-            sleep(60);
-        }
+        exit(EXIT_FAILURE);
     }
 
     bool running = true;
