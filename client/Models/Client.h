@@ -19,7 +19,6 @@ public:
     void write(std::string);
 
     int getSocket() const;
-    int getSpeed() const;
 
     void updateSpeed(int speed = -1);
     void updateLicensePlate();

@@ -20,21 +20,23 @@ void *UpdateSpeedAndLocation(void *ptr)
 int main(int argc, char *argv[])
 {
     pthread_t thread;
+    srand(time(nullptr));
 
     if (argc != 3)
     {
-        printf("Sintax: %s <server_ip> <port> <license_plate>(optional)\n", argv[0]);
-        return -1;
+        Logger::LogError("Invalid arguments.");
+        std::cout << "<server_ip> <port> <license_plate>(optional)" << std::endl;
+        exit(EXIT_FAILURE);
     }
 
-
-    srand(time(nullptr));
     auto *server = new Server(argv[1], std::stoi(argv[2]));
+
     std::string licensePlate;
     if(argv[3] != nullptr)
     {
         licensePlate.assign(argv[3]);
     }
+
     auto *client = new Client(CreateSocket(), licensePlate);
     client->connectToServer(server);
     client->updateLicensePlate();
@@ -55,7 +57,13 @@ int main(int argc, char *argv[])
             if(FD_ISSET(fd, &copy))
             {
                 std::string message;
-                Read(fd, message);
+                int code = Read(fd, message);
+                if(code <= 0)
+                {
+                    Logger::LogError("Error occurred while reading.");
+                    running = false;
+                    break;
+                }
 
                 if (fd == 0)
                 {
@@ -63,18 +71,21 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-                    std::cout << message << std::endl;
+                    if(message != "quit")
+                    {
+                        Logger::LogMessage(message);
+                    }
                 }
 
                 if(message == "quit")
                 {
-                    printf("Closing the client. Bye!\n");
                     running = false;
                 }
             }
         }
     }
 
+    std::cout << "Closing the client. Bye!" << std::endl;
     client->close();
 
     return 0;

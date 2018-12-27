@@ -4,12 +4,14 @@
 #include <arpa/inet.h>
 #include "Client.h"
 #include "Server.h"
+#include "../Helpers/Logger.h"
 
 void Client::connectToServer(Server *server)
 {
     if (connect(m_socket, (struct sockaddr *)&server->server, sizeof(struct sockaddr)) == -1)
     {
-        perror("[client]Eroare la connect().\n");
+        Logger::LogError("Can't connect to the server.");
+        exit(EXIT_FAILURE);
     }
 }
 
@@ -20,8 +22,6 @@ Client::Client(int socket, std::string licensePlate)
 
     FD_SET(0, &this->m_master);
     FD_SET(this->m_socket, &this->m_master);
-
-    this->updateSpeed();
 }
 
 int Client::getSocket() const
@@ -32,7 +32,11 @@ int Client::getSocket() const
 void Client::select(fd_set &masterCopy)
 {
     masterCopy = this->m_master;
-    ::select(this->m_socket + 1, &masterCopy, nullptr, nullptr, nullptr);
+    if(::select(this->m_socket + 1, &masterCopy, nullptr, nullptr, nullptr) == -1)
+    {
+        Logger::LogError("Error occurred at select.");
+        exit(EXIT_FAILURE);
+    }
 }
 
 void Client::close()
@@ -55,14 +59,12 @@ void Client::updateSpeed(int speed)
     this->write("update_speed " + std::to_string(this->m_speed));
 }
 
-int Client::getSpeed() const
-{
-    return m_speed;
-}
-
 void Client::write(std::string message)
 {
-    Write(this->getSocket(), message);
+    if(Write(this->getSocket(), message) <= 0)
+    {
+        Logger::LogError("Error occurred while writing to server.");
+    }
 }
 
 std::string Client::generateLicensePlate()
