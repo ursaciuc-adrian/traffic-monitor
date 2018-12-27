@@ -6,13 +6,17 @@
 #include "Server.h"
 #include "Client.cpp"
 #include "../Helpers/JsonHelper.h"
+#include "../Helpers/Logger.h"
 
 void Server::createServer(int port, int queueSize)
 {
     this->m_socket = CreateSocket();
 
     int optval = 1;
-    setsockopt(this->m_socket, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
+    if(setsockopt(this->m_socket, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)) == -1)
+    {
+        Logger::LogError("Error occurred while setting the options for the socket.");
+    }
 
     this->m_server.sin_family = AF_INET;
     this->m_server.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -32,7 +36,13 @@ void Server::addClient()
 {
     int socket = accept(this->m_socket, nullptr, nullptr);
 
-    auto *client = new Client(socket, "127.0.0.1", 2026);
+    if(socket == -1)
+    {
+        Logger::LogError("Error occurred while accepting a client.");
+        return;
+    }
+
+    auto *client = new Client(socket);
     this->m_clients.push_back(client);
 
     FD_SET(socket, &this->m_master);
@@ -66,17 +76,14 @@ void Server::removeClient(Client *client)
 
         std::cout << "#" << client->getSocket() <<" | A client disconnected from the server." << std::endl;
     }
-    else
-    {
-        // TODO: Handle error
-    }
 }
 
 void Server::m_listen(int queueSize)
 {
     if (listen(this->m_socket, queueSize) == -1)
     {
-         perror("[Server]Error at listen().\n");
+        Logger::LogError("Error occurred at listen.");
+        exit(EXIT_FAILURE);
     }
 }
 
@@ -84,7 +91,8 @@ void Server::m_bind()
 {
     if (bind(this->m_socket, (struct sockaddr *) &this->m_server, sizeof(struct sockaddr)) == -1)
     {
-        perror("[Server]Error at bind().\n");
+        Logger::LogError("Error occurred at bind.");
+        exit(EXIT_FAILURE);
     }
 }
 
@@ -115,12 +123,19 @@ Server::Server()
 void Server::select(fd_set &masterCopy)
 {
     masterCopy = this->m_master;
-    ::select(this->m_nfds + 1, &masterCopy, nullptr, nullptr, nullptr);
+    if(::select(this->m_nfds + 1, &masterCopy, nullptr, nullptr, nullptr) == -1)
+    {
+        Logger::LogError("Error occurred at select.");
+        exit(EXIT_FAILURE);
+    }
 }
 
 void Server::writeToClient(Client *client, std::string message)
 {
-    Write(client->getSocket(), message);
+    if(Write(client->getSocket(), message) <= 0)
+    {
+        Logger::LogError("Error occurred while writing to a client.");
+    }
 }
 
 const std::vector<Client *> Server::getClients() const

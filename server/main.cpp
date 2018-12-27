@@ -52,7 +52,7 @@ Response HandleCommand(const std::string &str, Client *client)
 
 void SignalHandler(int signal)
 {
-    if(signal == SIGTERM)
+    if(signal == SIGTERM || signal == EXIT_FAILURE)
     {
         server->writeToAllClients("The server went down.");
         server->writeToAllClients("quit");
@@ -62,6 +62,7 @@ void SignalHandler(int signal)
 int main()
 {
     signal(SIGTERM, SignalHandler);
+    signal(EXIT_FAILURE, SignalHandler);
 
     server = new Server();
 
