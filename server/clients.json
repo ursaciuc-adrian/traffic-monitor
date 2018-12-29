@@ -1,14 +1,6 @@
 {
     "clients": [
         {
-            "licensePlate": "OE16QLK",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "EY73IWH",
-            "subscriptions": []
-        },
-        {
             "licensePlate": "GV78VKK",
             "subscriptions": [
                 "weather",
@@ -17,155 +9,15 @@
             ]
         },
         {
-            "licensePlate": "DV77WKY",
+            "licensePlate": "ZB66DHE",
             "subscriptions": []
         },
         {
-            "licensePlate": "TV78OXS",
+            "licensePlate": "IM87NHO",
             "subscriptions": []
         },
         {
-            "licensePlate": "FL69SAK",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "XX88VXL",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "JL31CVE",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "RI80EGM",
-            "subscriptions": [
-                "gas"
-            ]
-        },
-        {
-            "licensePlate": "FN53PZC",
-            "subscriptions": [
-                "news"
-            ]
-        },
-        {
-            "licensePlate": "GO75XKU",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "LI06WAQ",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "EU87PPF",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "ML20XLY",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "UZ76TAN",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "QQ93RMK",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "QZ39ESX",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "ZJ93YSC",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "JJ88KMW",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "ME16DAQ",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "GQ91YUO",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "WD14DBY",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "GT97BZI",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "KE29WPI",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "AS31JYS",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "FP82BUC",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "UE46ZDD",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "WL55COM",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "OR43TLF",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "DR87ORJ",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "JX22XCE",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "XQ53CJO",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "PM69SFI",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "CQ98YBO",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "BF53OEA",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "JM68ZCF",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "MR04JEU",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "LS17AKR",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "DP31GYH",
-            "subscriptions": []
-        },
-        {
-            "licensePlate": "SX87SVR",
+            "licensePlate": "QO52QCA",
             "subscriptions": []
         }
     ]

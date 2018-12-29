@@ -23,13 +23,14 @@ Server *server;
 
 Response HandleCommand(const std::string &str, Client *client)
 {
+    bool isFromClient = client != nullptr;
     const Command *command = deserializeInput(str);
 
     for(auto *handler: handlers)
     {
         if(handler->canHandle(command))
         {
-            handler->handle(client);
+            handler->handle(client, isFromClient);
 
             if(handler->hasResponse())
             {

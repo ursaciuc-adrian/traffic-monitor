@@ -26,6 +26,18 @@ public:
     virtual bool canHandle(const Command *command) = 0;
     virtual void handle(Client *client) = 0;
 
+    virtual void handle(Client *client, bool isFromClient)
+    {
+        if((isFromClient && this->m_forClient) || (!isFromClient && !this->m_forClient))
+        {
+            this->handle(client);
+        }
+        else
+        {
+            this->m_response = Response("You are not allowed to run this command.", Error);
+        }
+    }
+
     bool hasResponse()
     {
         return m_response.getType() != ResponseType(None);
