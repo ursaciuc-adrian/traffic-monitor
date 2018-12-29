@@ -11,4 +11,5 @@ public:
 
     bool canHandle(const Command *command) override;
     void handle(Client *client) override;
+    std::string getHelpText() override;
 };

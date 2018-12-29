@@ -15,6 +15,7 @@
 #include "Handlers/NotifierHandler.h"
 #include "Handlers/LicensePlateHandler.h"
 #include "Handlers/LocationHandler.h"
+#include "Handlers/HelpHandler.h"
 
 #define PORT 2026
 
@@ -74,6 +75,7 @@ int main()
     handlers.push_back(new LicensePlateHandler(server));
     handlers.push_back(new LocationHandler(server));
 
+    handlers.push_back(new HelpHandler(server, handlers));
 
     server->createServer(PORT, 5);
 

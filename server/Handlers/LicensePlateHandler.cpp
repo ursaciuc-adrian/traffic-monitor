@@ -14,7 +14,7 @@ bool LicensePlateHandler::canHandle(const Command *com)
 {
     m_response = Response();
 
-    if(com->value == "update_licensePlate")
+    if(com->value == "licensePlate")
     {
         if(com->getArgument(0) != nullptr)
         {
@@ -41,6 +41,11 @@ void LicensePlateHandler::handle(Client *client)
     }
 
     m_response = Response("License plate was set to " + licensePlate + ".", Success);
+}
+
+std::string LicensePlateHandler::getHelpText()
+{
+    return "licensePlate <your_licensePlate> - updates your license plate";
 }
 
 

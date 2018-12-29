@@ -5,7 +5,7 @@
 #include "NotifierHandler.h"
 
 NotifierHandler::NotifierHandler(Server *server)
-        : Handler(server, false)
+        : Handler(server, false, true)
 {
 }
 
@@ -47,6 +47,11 @@ void NotifierHandler::handle(Client *)
     }
 
     m_response = Response("Notification sent.", Success);
+}
+
+std::string NotifierHandler::getHelpText()
+{
+    return "notify <service> <message> - sends a message to all clients that are subscribed to a service";
 }
 
 

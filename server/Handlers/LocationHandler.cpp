@@ -38,5 +38,10 @@ void LocationHandler::handle(Client *client)
     m_response = Response("Location was updated to \"" + JsonHelper::getStreet(location)->name + "\".", Success);
 }
 
+std::string LocationHandler::getHelpText()
+{
+    return "location <location> - updates your location";
+}
+
 
 

@@ -45,5 +45,10 @@ void SubscribeHandler::handle(Client *client)
     m_response = Response("Successfully subscribed to " + subscription + ".", Success);
 }
 
+std::string SubscribeHandler::getHelpText()
+{
+    return "subscribe <service> - subscribe to a service and get notifications from it";
+}
+
 
 

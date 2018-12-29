@@ -12,23 +12,26 @@ protected:
     Response m_response;
     Server *m_server;
     bool m_forClient;
+    bool m_forServer;
 
 public:
-    explicit Handler(Server *server, bool forClient = true)
+    explicit Handler(Server *server, bool forClient = true, bool forServer = false)
         :m_server(server)
     {
         this->m_response = Response();
         this->m_forClient = forClient;
+        this->m_forServer = forServer;
     };
 
     ~Handler() = default;
 
     virtual bool canHandle(const Command *command) = 0;
     virtual void handle(Client *client) = 0;
+    virtual std::string getHelpText() = 0;
 
     virtual void handle(Client *client, bool isFromClient)
     {
-        if((isFromClient && this->m_forClient) || (!isFromClient && !this->m_forClient))
+        if((isFromClient && this->m_forClient) || (!isFromClient && this->m_forServer))
         {
             this->handle(client);
         }

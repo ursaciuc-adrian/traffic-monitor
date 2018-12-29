@@ -35,5 +35,10 @@ void AccidentHandler::handle(Client *client)
     m_response = Response("Accident reported.", Success);
 }
 
+std::string AccidentHandler::getHelpText()
+{
+    return "accident <location> - reports an accident and notifies all other drivers";
+}
+
 
 

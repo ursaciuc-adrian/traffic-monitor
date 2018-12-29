@@ -19,6 +19,18 @@
         {
             "licensePlate": "QO52QCA",
             "subscriptions": []
+        },
+        {
+            "licensePlate": "GP15POH",
+            "subscriptions": [
+                "weather"
+            ]
+        },
+        {
+            "licensePlate": "MC81GUS",
+            "subscriptions": [
+                "news"
+            ]
         }
     ]
 }

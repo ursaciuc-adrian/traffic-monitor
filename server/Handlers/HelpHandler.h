@@ -4,10 +4,13 @@
 #include "Handler.h"
 #include "../Models/Client.h"
 
-class SubscribeHandler: public Handler
+class HelpHandler: public Handler
 {
+private:
+    const std::vector<Handler*> m_handlers;
+
 public:
-    explicit SubscribeHandler(Server *server);
+    explicit HelpHandler(Server *server, std::vector<Handler*> handlers);
 
     bool canHandle(const Command *command) override;
     void handle(Client *client) override;

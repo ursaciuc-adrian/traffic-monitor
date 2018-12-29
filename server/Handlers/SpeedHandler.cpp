@@ -15,7 +15,7 @@ bool SpeedHandler::canHandle(const Command *com)
 {
     m_response = Response();
 
-    if(com->value == "update_speed")
+    if(com->value == "speed")
     {
         if(com->getArgument(0) != nullptr)
         {
@@ -45,6 +45,11 @@ void SpeedHandler::handle(Client *client)
     }
 
     m_response = Response("Speed was updated to " + speed + ".", Success);
+}
+
+std::string SpeedHandler::getHelpText()
+{
+    return "speed <your_speed> - updates your speed";
 }
 
 
