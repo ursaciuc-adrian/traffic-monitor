@@ -4,12 +4,10 @@
 #include <iostream>
 #include <iomanip>
 #include "../Models/Client.h"
-#include "../Libs/json.hpp"
-#include "../Models/Street.h"
-
+#include "../../Shared/Libs/json.hpp"
+#include "../../Shared/Models/Street.h"
 
 #define CLIENTS "../clients.json"
-#define STREETS "../../Shared/streets.json"
 
 using json = nlohmann::json;
 
@@ -24,24 +22,6 @@ class JsonHelper {
         return jsonFile;
     }
 public:
-    static Street* getStreet(int id)
-    {
-        Street *street = new Street();
-        json streets = fileToJson(STREETS)["streets"];
-        for(const auto &s: streets)
-        {
-            if(s["id"] == id)
-            {
-                street->id = id;
-                street->name = s["name"];
-                street->speedLimit = s["speedLimit"];
-                return street;
-            }
-        }
-
-        return street;
-    }
-
     static void addClient(Client *client)
     {
         std::ifstream i(CLIENTS);

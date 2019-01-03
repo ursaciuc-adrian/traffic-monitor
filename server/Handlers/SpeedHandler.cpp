@@ -3,7 +3,7 @@
 #include <cstring>
 
 #include "SpeedHandler.h"
-#include "../Models/Street.h"
+#include "../../Shared/Models/Street.h"
 #include "../Helpers/JsonHelper.h"
 
 SpeedHandler::SpeedHandler(Server *server)
@@ -37,7 +37,7 @@ void SpeedHandler::handle(Client *client)
     client->setSpeed(std::stoi(speed));
 
     Street *street;
-    street = JsonHelper::getStreet(client->getLocation());
+    street = Street::getStreet(client->getLocation());
 
     if(client->getSpeed() <= street->speedLimit / 2)
     {

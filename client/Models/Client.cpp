@@ -56,7 +56,7 @@ void Client::updateSpeed(int speed)
         m_speed = speed;
     }
 
-    this->write("update_speed " + std::to_string(this->m_speed));
+    this->write("speed " + std::to_string(this->m_speed));
 }
 
 void Client::write(std::string message)
@@ -88,10 +88,37 @@ void Client::updateLicensePlate()
     {
         this->m_licensePlate = generateLicensePlate();
     }
-    this->write("update_licensePlate " + this->m_licensePlate);
+    this->write("licensePlate " + this->m_licensePlate);
 }
 
 void Client::updateLocation()
 {
-    this->write("update_location " + std::to_string(1 + rand() % 3));
+    std::vector<Street *> options;
+
+    if(this->m_location == nullptr)
+    {
+        options = this->m_streets;
+    }
+    else
+    {
+        for(auto street: this->m_streets)
+        {
+            if(street->to == this->m_location->to || street->from == this->m_location->to ||
+                street->to == this->m_location->from || street->from == this->m_location->from)
+            {
+                if(street->id != this->m_location->id)
+                {
+                    options.push_back(street);
+                }
+            }
+        }
+    }
+
+    this->m_location = options[rand() % options.size()];
+    this->write("location " + std::to_string(this->m_location->id));
+}
+
+void Client::getStreets()
+{
+    this->m_streets = Street::getStreets();
 }

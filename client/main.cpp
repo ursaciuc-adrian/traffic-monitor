@@ -6,6 +6,7 @@
 #include "../Shared/CommunicationHelper.h"
 #include "Models/Client.cpp"
 #include "Models/Server.cpp"
+#include "../Shared/Models/Street.h"
 
 void *UpdateSpeedAndLocation(void *ptr)
 {
@@ -40,8 +41,9 @@ int main(int argc, char *argv[])
     auto *client = new Client(CreateSocket(), licensePlate);
     client->connectToServer(server);
     client->updateLicensePlate();
+    client->getStreets();
 
-    if(pthread_create(&thread, NULL, UpdateSpeedAndLocation, (void*) client))
+    if(pthread_create(&thread, nullptr, UpdateSpeedAndLocation, (void*) client))
     {
         exit(EXIT_FAILURE);
     }

@@ -1,33 +1,80 @@
-{
-    "streets": [
-        {
-            "id": 1,
-            "name": "Str. Lapusneanu, nr.8",
-            "speedLimit": 50
-        },
-        {
-            "id": 2,
-            "name": "Str. Lapusneanu, nr.2",
-            "speedLimit": 30
-        },
-        {
-            "id": 3,
-            "name": "Str. Lapusneanu, nr.11",
-            "speedLimit": 30
-        }
-    ],
-    "connections": [
-        {
-            "street1": 2,
-            "street2": 3,
-            "street1-point": "end",
-            "street2-point": "start"
-        },
-        {
-            "street1": 1,
-            "street2": 3,
-            "street1-point": "end",
-            "street2-point": "end"
-        }
-    ]
-}
+[
+    {
+        "id": 1,
+        "from": 1,
+        "to": 2,
+        "name": "Walton Road",
+        "speedLimit": 50
+    },
+    {
+        "id": 2,
+        "from": 2,
+        "to": 3,
+        "name": "Sherwood Avenue",
+        "speedLimit": 30
+    },
+    {
+        "id": 3,
+        "from": 3,
+        "to": 4,
+        "name": "Wellington Street",
+        "speedLimit": 30
+    },
+    {
+        "id": 4,
+        "from": 4,
+        "to": 5,
+        "name": "Byron Street",
+        "speedLimit": 30
+    },
+    {
+        "id": 5,
+        "from": 4,
+        "to": 7,
+        "name": "The Square",
+        "speedLimit": 30
+    },
+    {
+        "id": 6,
+        "from": 5,
+        "to": 6,
+        "name": "Earl Street",
+        "speedLimit": 30
+    },
+    {
+        "id": 7,
+        "from": 6,
+        "to": 7,
+        "name": "Arundel Close",
+        "speedLimit": 30
+    },
+    {
+        "id": 8,
+        "from": 7,
+        "to": 10,
+        "name": "Clarence Road",
+        "speedLimit": 30
+    },
+    {
+        "id": 9,
+        "from": 7,
+        "to": 8,
+        "name": "The Sidings",
+        "speedLimit": 30
+    },
+    {
+        "id": 10,
+        "from": 8,
+        "to": 9,
+        "name": "Heron Close",
+        "speedLimit": 30
+    },
+    {
+        "id": 11,
+        "from": 9,
+        "to": 10,
+        "name": "Southfield Road",
+        "speedLimit": 30
+    }
+    
+]

@@ -14,7 +14,7 @@ bool LocationHandler::canHandle(const Command *com)
 {
     m_response = Response();
 
-    if(com->value == "update_location")
+    if(com->value == "location")
     {
         if(com->getArgument(0) != nullptr)
         {
@@ -35,7 +35,7 @@ void LocationHandler::handle(Client *client)
     int location = std::stoi(this->m_command->getArgument(0)->getValue());
     client->setLocation(location);
 
-    m_response = Response("Location was updated to \"" + JsonHelper::getStreet(location)->name + "\".", Success);
+    m_response = Response("Location was updated to \"" + Street::getStreet(location)->name + "\".", Success);
 }
 
 std::string LocationHandler::getHelpText()
