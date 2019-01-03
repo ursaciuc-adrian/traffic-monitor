@@ -5,6 +5,7 @@
 #include <utility>
 
 #include "Client.h"
+#include "../../Shared/Models/Street.h"
 
 Client::Client(int socket)
     : m_socket(socket)
@@ -57,12 +58,12 @@ std::vector<std::string> Client::getSubscriptions()
     return this->m_subscriptions;
 }
 
-void Client::setLocation(int location)
+void Client::setLocation(Street *location)
 {
     this->m_location = location;
 }
 
-int Client::getLocation() {
+Street* Client::getLocation() {
     return this->m_location;
 }
 

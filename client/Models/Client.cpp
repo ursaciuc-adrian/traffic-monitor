@@ -48,7 +48,7 @@ void Client::updateSpeed(int speed)
 {
     if(speed == -1)
     {
-        int range = 20 - 100 + 1;
+        int range = 20 - 140 + 1;
         m_speed = rand() % range + 20;
     }
     else

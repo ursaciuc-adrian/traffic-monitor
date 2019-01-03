@@ -33,9 +33,9 @@ bool LocationHandler::canHandle(const Command *com)
 void LocationHandler::handle(Client *client)
 {
     int location = std::stoi(this->m_command->getArgument(0)->getValue());
-    client->setLocation(location);
+    client->setLocation(Street::getStreet(location));
 
-    m_response = Response("Location was updated to \"" + Street::getStreet(location)->name + "\".", Success);
+    m_response = Response("Location was updated to \"" + client->getLocation()->name + "\" (" + std::to_string(client->getLocation()->speedLimit) + ").", Success);
 }
 
 std::string LocationHandler::getHelpText()

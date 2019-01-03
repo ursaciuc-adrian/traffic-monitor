@@ -11,14 +11,14 @@
         "from": 2,
         "to": 3,
         "name": "Sherwood Avenue",
-        "speedLimit": 30
+        "speedLimit": 100
     },
     {
         "id": 3,
         "from": 3,
         "to": 4,
         "name": "Wellington Street",
-        "speedLimit": 30
+        "speedLimit": 100
     },
     {
         "id": 4,
@@ -32,49 +32,49 @@
         "from": 4,
         "to": 7,
         "name": "The Square",
-        "speedLimit": 30
+        "speedLimit": 50
     },
     {
         "id": 6,
         "from": 5,
         "to": 6,
         "name": "Earl Street",
-        "speedLimit": 30
+        "speedLimit": 70
     },
     {
         "id": 7,
         "from": 6,
         "to": 7,
         "name": "Arundel Close",
-        "speedLimit": 30
+        "speedLimit": 100
     },
     {
         "id": 8,
         "from": 7,
         "to": 10,
         "name": "Clarence Road",
-        "speedLimit": 30
+        "speedLimit": 120
     },
     {
         "id": 9,
         "from": 7,
         "to": 8,
         "name": "The Sidings",
-        "speedLimit": 30
+        "speedLimit": 50
     },
     {
         "id": 10,
         "from": 8,
         "to": 9,
         "name": "Heron Close",
-        "speedLimit": 30
+        "speedLimit": 50
     },
     {
         "id": 11,
         "from": 9,
         "to": 10,
         "name": "Southfield Road",
-        "speedLimit": 30
+        "speedLimit": 50
     }
     
 ]
