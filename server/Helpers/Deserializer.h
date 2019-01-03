@@ -16,16 +16,38 @@ static const Command* deserializeInput(std::string inputString)
     std::string token;
 
     bool firstToken = true;
-    while (std::getline(iss, token, ' '))
-    {
-        if(firstToken)
+    inputString += " ";
+    for(int i = 0; i < inputString.length(); i++){
+
+        if(inputString[i] == ' ')
         {
-            command->value = token;
-            firstToken = false;
+            if(firstToken)
+            {
+                command->value = token;
+                firstToken = false;
+            }
+            else
+            {
+                command->addArgument(token);
+            }
+
+            token = "";
         }
         else
         {
-            command->addArgument(token);
+            if(inputString[i] == '\"' )
+            {
+                i++;
+                while( inputString[i] != '\"' )
+                {
+                    token += inputString[i];
+                    i++;
+                }
+            }
+            else
+            {
+                token += inputString[i];
+            }
         }
     }
 
