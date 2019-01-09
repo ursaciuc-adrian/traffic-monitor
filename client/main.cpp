@@ -7,6 +7,7 @@
 #include "Models/Client.cpp"
 #include "Models/Server.cpp"
 #include "../Shared/Models/Street.h"
+#include "../Shared/Helpers/Logger.h"
 
 void *UpdateSpeedAndLocation(void *ptr)
 {

@@ -6,7 +6,7 @@
 #include "Server.h"
 #include "Client.cpp"
 #include "../Helpers/JsonHelper.h"
-#include "../Helpers/Logger.h"
+#include "../../Shared/Helpers/Logger.h"
 
 void Server::createServer(int port, int queueSize)
 {

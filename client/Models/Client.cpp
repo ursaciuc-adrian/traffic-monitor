@@ -4,7 +4,7 @@
 #include <arpa/inet.h>
 #include "Client.h"
 #include "Server.h"
-#include "../Helpers/Logger.h"
+#include "../../Shared/Helpers/Logger.h"
 
 void Client::connectToServer(Server *server)
 {
