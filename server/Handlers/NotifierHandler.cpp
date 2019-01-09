@@ -42,7 +42,7 @@ void NotifierHandler::handle(Client *)
     {
         if(client->hasSubscription(this->m_command->getArgument(0)->getValue()))
         {
-            this->m_server->writeToClient(client, this->m_command->getArgument(1)->getValue());
+            this->m_server->writeToClient(client, this->m_command->getArgument(0)->getValue() + ": " + this->m_command->getArgument(1)->getValue());
         }
     }
 
